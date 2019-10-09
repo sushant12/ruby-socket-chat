@@ -1,9 +1,18 @@
 require 'socket'
 
-socket = TCPSocket.new 'localhost', 4000
-puts "==== Connected to 4000 ===="
-socket.puts 'Sus'
-puts "==== Wrote to socket ===="
-puts socket.gets
-puts "==== Print values from socket ===="
-socket.close
+class Client
+  class << self
+    attr_accessor :host, :port
+  end
+
+  def self.request
+    @client = TCPSocket.new(host, port)
+    @client.write('hello world')
+    @client.read
+  end
+end
+
+
+Client.host = '0.0.0.0'
+Client.port = 4002
+puts Client.request

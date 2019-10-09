@@ -1,14 +1,25 @@
 require 'socket'
 
-# bind server to port 4000
-server = TCPServer.new(4000)
-puts "====== Server started on 4000 ====="
-# wait for client to connect
-loop do
-  puts "===== Waiting for requests ======"
-  client = server.accept
-  puts "===== Request received ======"
-  client.puts client.gets
-  puts "===== Closing client ========"
-  client.close
+class Server
+  def initialize(port)
+    @server = TCPServer.new(port)
+    puts "Listening on port #{port}"
+  end
+
+  def start
+    Socket.accept_loop(@server) do |connection|
+      handle(connection)
+      connection.close
+    end
+  end
+
+  private
+
+  def handle(connection)
+    request = connection.read_nonblock(1024)
+    connection.write(request)
+  end
 end
+
+server = Server.new(4002)
+server.start
