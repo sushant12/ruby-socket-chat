@@ -3,11 +3,13 @@ require 'socket'
 class Server
   def initialize(port)
     @server = TCPServer.new(port)
+    @connections = []
     puts "Listening on port #{port}"
   end
 
   def start
     Socket.accept_loop(@server) do |connection|
+      @connections << connection
       Thread.new do
         loop do
           handle(connection)
@@ -21,7 +23,7 @@ class Server
   def handle(connection)
     request = connection.gets
     puts request
-    connection.puts(request)
+    @connections.each { |connection| connection.puts(request) }
   end
 end
 
