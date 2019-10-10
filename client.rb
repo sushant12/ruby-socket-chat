@@ -7,16 +7,29 @@ class Client
 
   def self.request
     @client = TCPSocket.new(host, port)
-    # loop do
-      msg = $stdin.gets.chomp
-      @client.puts(msg)
-      # @client.close_write
-    # end
-    @client.gets
+    listen
+    send
+  end
+
+  def self.listen
+    Thread.new do
+      loop do
+        puts "====#{@client.gets}"
+      end
+    end
+  end
+
+  def self.send
+    Thread.new do
+      loop do
+        msg = $stdin.gets.chomp
+        @client.puts(msg)
+      end
+    end.join
   end
 end
 
 
 Client.host = '0.0.0.0'
 Client.port = 4002
-puts Client.request
+Client.request
