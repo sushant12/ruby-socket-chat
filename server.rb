@@ -22,8 +22,9 @@ class Server
 
   def handle(connection)
     request = connection.gets
-    puts request
-    @connections.each { |connection| connection.puts(request) }
+    @connections.each do |client| 
+      client.puts(request) if client != connection
+    end
   end
 end
 
