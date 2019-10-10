@@ -1,5 +1,4 @@
 require 'socket'
-require 'thread'
 
 class Server
   def initialize(port)
@@ -10,8 +9,9 @@ class Server
   def start
     Socket.accept_loop(@server) do |connection|
       Thread.new do
-        handle(connection)
-        connection.close
+        loop do
+          handle(connection)
+        end
       end
     end
   end
@@ -21,7 +21,6 @@ class Server
   def handle(connection)
     request = connection.gets
     puts request
-    sleep(5)
     connection.puts(request)
   end
 end
