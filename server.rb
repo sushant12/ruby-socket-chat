@@ -10,6 +10,7 @@ class Server
   def start
     Socket.accept_loop(@server) do |connection|
       @connections << connection
+      puts @connections
       Thread.new do
         loop do
           handle(connection)
@@ -22,8 +23,10 @@ class Server
 
   def handle(connection)
     request = connection.gets
-    @connections.each do |client| 
-      client.puts(request) if client != connection
+    connection.close if request.nil?
+    @connections.each do |client|
+      next if client.closed?
+      client.puts(request) if client != connection && !client.closed?
     end
   end
 end
