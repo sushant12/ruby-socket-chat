@@ -1,4 +1,3 @@
-## NOTE: It will only work on linux os because of `gets` and `puts` that's used to read and write to tcp connections
 
 run tcp server `ruby server.rb`
 
