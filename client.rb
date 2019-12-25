@@ -30,6 +30,6 @@ class Client
 end
 
 
-Client.host = '192.168.0.108'
+Client.host = '127.0.0.1'
 Client.port = 4002
 Client.request
